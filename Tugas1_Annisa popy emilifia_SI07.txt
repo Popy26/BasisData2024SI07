@@ -1,0 +1,669 @@
+
+NAMA	:Annisa popy emilifia
+KELAS	:SI07
+TUGAS BASIS DATA
+
+1.Buatlah database baru dengan nama: dbpegawai
+JB.
+MariaDB [(none)]> CREATE DATABASE dbpegawai;
+Query OK, 1 row affected (0.001 sec)
+
+MariaDB [(none)]> SHOW DATABASES;
++--------------------+
+| Database           |
++--------------------+
+| dbpegawai          |
+| dbpos              |
+| dbsi07             |
+| information_schema |
+| mysql              |
+| performance_schema |
+| phpmyadmin         |
+| test               |
++--------------------+
+8 rows in set (0.001 sec)
+
+2.Masuk ke dbpegawai dengan perintah USE
+JB.
+MariaDB [(none)]> USE dbpegawai;
+Database changed
+
+3.Buatlah tabel baru dengan nama: divisi, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+JB.
+MariaDB [dbpegawai]> CREATE TABLE divisi(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.061 sec)
+
+4.Tampilkan deskripsi tabel divisi
+JB.
+MariaDB [dbpegawai]> DESC divisi;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.030 sec)
+
+5.id int primary key auto_increment
+nama varchar(30) dengan contraint: wajib diisi dan tidak boleh sama
+JB.
+MariaDB [dbpegawai]> CREATE TABLE jabatan(
+    -> id int primary key auto_increment,
+    -> nama varchar(30) not null unique);
+Query OK, 0 rows affected (0.052 sec)
+
+6.Tampilkan deskripsi tabel jabatan 2
+JB.
+MariaDB [dbpegawai]> DESC jabatan;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int(11)     | NO   | PRI | NULL    | auto_increment |
+| nama  | varchar(30) | NO   | UNI | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+2 rows in set (0.027 sec)
+
+7.Buatlah tabel baru dengan nama: pegawai, dengan kolom-kolom sbb:
+id int primary key auto_increment
+nip char dengan constraint: wajib diisi, tidak boleh sama & 5 karakter
+nama varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+gender enum('Laki-Laki','Perempuan') dengan constraint: wajib diisi
+tmp_lahir varchar dengan constraint: wajib diisi dan maksimal 30 karakter
+tgl_lahir date dengan constraint: wajib diisi
+iddivisi int sebagai foreign key, tidak boleh kosong, merujuk ke tabel divisi ke field id
+idjabatan int sebagai foreign key, tidak boleh kosong, merujuk ke tabel jabatan ke field id
+alamat text
+JB.
+MariaDB [dbpegawai]> CREATE TABLE pegawai(
+    -> id int primary key auto_increment,
+    -> nip char(5) not null unique,
+    -> nama varchar(30) not null,
+    -> gender enum('laki-laki', 'perempuan') not null,
+    -> tmp_lahir varchar(30) not null,
+    -> tgl_lahir date not null,
+    -> iddivisi int not null references divisi(id),
+    -> idjabatan int not null references jabatan(id),
+    -> alamat text);
+Query OK, 0 rows affected (0.061 sec)
+
+8.Tampilkan deskripsi tabel pegawai 
+JB.
+MariaDB [dbpegawai]> DESC pegawai;
++-----------+-------------------------------+------+-----+---------+----------------+
+| Field     | Type                          | Null | Key | Default | Extra          |
++-----------+-------------------------------+------+-----+---------+----------------+
+| id        | int(11)                       | NO   | PRI | NULL    | auto_increment |
+| nip       | char(5)                       | NO   | UNI | NULL    |                |
+| nama      | varchar(30)                   | NO   |     | NULL    |                |
+| gender    | enum('laki-laki','perempuan') | NO   |     | NULL    |                |
+| tmp_lahir | varchar(30)                   | NO   |     | NULL    |                |
+| tgl_lahir | date                          | NO   |     | NULL    |                |
+| iddivisi  | int(11)                       | NO   |     | NULL    |                |
+| idjabatan | int(11)                       | NO   |     | NULL    |                |
+| alamat    | text                          | YES  |     | NULL    |                |
++-----------+-------------------------------+------+-----+---------+----------------+
+9 rows in set (0.028 sec)
+
+9.Tampilkan tabel-tabel yang ada di dbpegawai 
+JB.
+MariaDB [dbpegawai]> SHOW TABLES;
++---------------------+
+| Tables_in_dbpegawai |
++---------------------+
+| divisi              |
+| jabatan             |
+| pegawai             |
++---------------------+
+3 rows in set (0.001 sec)
+
+10.Input data divisi => SDM, Keuangan, Marketing, IT 
+JB.
+MariaDB [dbpegawai]> INSERT INTO divisi (nama) VALUES
+    -> ('SDM'),
+    -> ('KEUANGAN'),
+    -> ('MARKETING'),
+    -> ('IT');
+Query OK, 4 rows affected (0.017 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+11.Tampilkan seluruh data divisi
+JB.
+MariaDB [dbpegawai]> SELECT * FROM divisi;
++----+-----------+
+| id | nama      |
++----+-----------+
+|  4 | IT        |
+|  2 | KEUANGAN  |
+|  3 | MARKETING |
+|  1 | SDM       |
++----+-----------+
+4 rows in set (0.005 sec)
+
+12.Input data jabatan => Direktur, Manajer, Asisten Manajer, Staff
+JB.
+MariaDB [dbpegawai]> INSERT INTO jabatan (nama) VALUES
+    -> ('DIRECTUR'),
+    -> ('MANAGER'),
+    -> ('ASISTEN MANAGER'),
+    -> ('STAFF');
+Query OK, 4 rows affected (0.006 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+13.Tampilkan seluruh data jabatan 
+JB.
+MariaDB [dbpegawai]> SELECT * FROM jabatan;
++----+-----------------+
+| id | nama            |
++----+-----------------+
+|  3 | ASISTEN MANAGER |
+|  1 | DIRECTUR        |
+|  2 | MANAGER         |
+|  4 | STAFF           |
++----+-----------------+
+4 rows in set (0.001 sec)
+
+14.Input 20 orang pegawai ( 1 divisi 5 orang, untuk gender dan jabatan diacak) 
+JB.
+MariaDB [dbpegawai]> INSERT INTO pegawai
+    -> (nip, nama, gender, tmp_lahir, tgl_lahir, iddivisi, idjabatan, alamat) VALUES
+    -> ('00001', 'popy', 'perempuan', 'solok', '2003/02/26', 4, 1, 'jln balai hilir sumbar'),
+    -> ('00002', 'salamah', 'perempuan', 'solok', '2000/02/16', 4, 1, 'jln balai hilir sumbar'),
+    -> ('00003', 'sindy', 'perempuan', 'solok', '2000/03/16', 4, 1, 'jln pasangrahan kota jambi'),
+    -> ('00004', 'vina', 'perempuan', 'solok', '2000/03/16', 4, 1, 'jln pasangrahan kota jambi'),
+    -> ('00005', 'arra', 'perempuan', 'solok', '2000/03/16', 4, 1, 'jln pasangrahan kota depok'),
+    -> ('00006', 'muhammad risky p', 'laki-laki', 'solok', '2000/03/16', 3, 2, 'jln kemenangan depok 09/00'),
+    -> ('00007', 'muhammad rasyid had', 'laki-laki', 'depok', '2000/03/16', 3, 2, 'jln kemenangan depok 09/00'),
+    -> ('00008', 'muhammad al_fajri', 'laki-laki', 'jakarta', '2000/03/16', 3, 2, 'jln kemenangan depok 09/00'),
+    -> ('00009', 'muhammad danish', 'laki-laki', 'jakarta', '2000/03/16', 3, 2, 'jln kemenangan depok 09/00'),
+    -> ('00010', 'muhammad fayad', 'laki-laki', 'bogor', '2000/03/16', 3, 2, 'jln kemenangan depok 09/00'),
+    -> ('00011', 'dinda azzahra', 'perempuan', 'palembang', '2000/02/16', 2, 3, 'jln balai hilir sumbar'),
+    -> ('00012', 'nayla putri', 'perempuan', 'palembang', '2002/02/16', 2, 3, 'jln sumber berkah'),
+    -> ('00013', 'fatimah putri', 'perempuan', 'bandung', '2002/02/16', 2, 3, 'jln sumber berkah jaya kaya'),
+    -> ('00014', 'laylatul jannah', 'perempuan', 'bandung', '2002/05/16', 2, 3, 'jln sumber berkah jaya kaya'),
+    -> ('00015', 'berliana putri', 'perempuan', 'medan', '2001/05/16', 2, 3, 'jln tak tau arah'),
+    -> ('00016', 'danis putra bungsu', 'laki-laki', 'bogor', '2000/03/16', 1, 4, 'jln kemenangan depok 09/00'),
+    -> ('00017', 'ziki fattah akbar', 'laki-laki', 'semarang', '2000/03/16', 1, 4, 'jln pahlawan solok padang 00'),
+    -> ('00018', 'fayad abdullah', 'laki-laki', 'semarang', '1999/03/16', 1, 4, 'jln pahlawan solok padang 00'),
+    -> ('00019', 'fayad abdullah', 'laki-laki', 'semarang', '1999/03/16', 1, 4, 'jln pahlawan solok padang 00'),
+    -> ('00020', 'fayad abdullah', 'laki-laki', 'semarang', '1999/03/16', 1, 4, 'jln pahlawan solok padang 00');
+Query OK, 20 rows affected (0.006 sec)
+Records: 20  Duplicates: 0  Warnings: 0
+
+15.Tampilkan seluruh data pegawai
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai;
++----+-------+---------------------+-----------+-----------+------------+----------+-----------+------------------------------+
+| id | nip   | nama                | gender    | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                       |
++----+-------+---------------------+-----------+-----------+------------+----------+-----------+------------------------------+
+|  1 | 00001 | popy                | perempuan | solok     | 2003-02-26 |        4 |         1 | jln balai hilir sumbar       |
+|  2 | 00002 | salamah             | perempuan | solok     | 2000-02-16 |        4 |         1 | jln balai hilir sumbar       |
+|  3 | 00003 | sindy               | perempuan | solok     | 2000-03-16 |        4 |         1 | jln pasangrahan kota jambi   |
+|  4 | 00004 | vina                | perempuan | solok     | 2000-03-16 |        4 |         1 | jln pasangrahan kota jambi   |
+|  5 | 00005 | arra                | perempuan | solok     | 2000-03-16 |        4 |         1 | jln pasangrahan kota depok   |
+|  6 | 00006 | muhammad risky p    | laki-laki | solok     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |
+|  7 | 00007 | muhammad rasyid had | laki-laki | depok     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |
+|  8 | 00008 | muhammad al_fajri   | laki-laki | jakarta   | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |
+|  9 | 00009 | muhammad danish     | laki-laki | jakarta   | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |
+| 10 | 00010 | muhammad fayad      | laki-laki | bogor     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |
+| 11 | 00011 | dinda azzahra       | perempuan | palembang | 2000-02-16 |        2 |         3 | jln balai hilir sumbar       |
+| 12 | 00012 | nayla putri         | perempuan | palembang | 2002-02-16 |        2 |         3 | jln sumber berkah            |
+| 13 | 00013 | fatimah putri       | perempuan | bandung   | 2002-02-16 |        2 |         3 | jln sumber berkah jaya kaya  |
+| 14 | 00014 | laylatul jannah     | perempuan | bandung   | 2002-05-16 |        2 |         3 | jln sumber berkah jaya kaya  |
+| 15 | 00015 | berliana putri      | perempuan | medan     | 2001-05-16 |        2 |         3 | jln tak tau arah             |
+| 16 | 00016 | danis putra bungsu  | laki-laki | bogor     | 2000-03-16 |        1 |         4 | jln kemenangan depok 09/00   |
+| 17 | 00017 | ziki fattah akbar   | laki-laki | semarang  | 2000-03-16 |        1 |         4 | jln pahlawan solok padang 00 |
+| 18 | 00018 | fayad abdullah      | laki-laki | semarang  | 1999-03-16 |        1 |         4 | jln pahlawan solok padang 00 |
+| 19 | 00019 | fayad abdullah      | laki-laki | semarang  | 1999-03-16 |        1 |         4 | jln pahlawan solok padang 00 |
+| 20 | 00020 | fayad abdullah      | laki-laki | semarang  | 1999-03-16 |        1 |         4 | jln pahlawan solok padang 00 |
++----+-------+---------------------+-----------+-----------+------------+----------+-----------+------------------------------+
+20 rows in set (0.001 sec)
+
+16.Ubah data 5 orang pegawai (dengan ketentuan ubah 3 kolom(bebas)) 
+JB.
+MariaDB [dbpegawai]> UPDATE pegawai SET nama = 'annisa popy e',  tmp_lahir = 'padang',  alamat = 'jln menuju surganya allah 07' WHERE id = 1;
+Query OK, 1 row affected (0.014 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET nama = 'sindy aulia',  tmp_lahir = 'pekan baru',  alamat = 'jln menuju surganya allah 07'  WHERE id = 2;
+Query OK, 1 row affected (0.008 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET nama = 'sevina citra',  tmp_lahir = 'surabaya',  alamat = 'jln menuju surganya allah 07'  WHERE id = 3;
+Query OK, 1 row affected (0.005 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET nama = 'salamah mutmainah',  tmp_lahir = 'surabaya',  alamat = 'jln menuju surganya allah 07'  WHERE id = 4;
+Query OK, 1 row affected (0.006 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET nama = 'najwa zahra zahiro',  tmp_lahir = 'palembang',  alamat = 'jln menuju surganya allah 07'  WHERE id = 5;
+Query OK, 1 row affected (0.003 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+17.Hapus 2 orang pegawai pegawai terakhir
+JB.
+MariaDB [dbpegawai]> DELETE FROM pegawai WHERE id = 19;
+Query OK, 1 row affected (0.006 sec)
+
+MariaDB [dbpegawai]> DELETE FROM pegawai WHERE id = 20;
+Query OK, 1 row affected (0.006 sec)
+
+18.Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru berat_badan dengan 
+tipe data float wajib diisi, lalu input berat badan semua pegawai secara acak
+JB.
+MariaDB [dbpegawai]> ALTER TABLE pegawai ADD COLUMN berat_badan FLOAT NOT NULL;
+Query OK, 0 rows affected (0.014 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]> UPDATE pegawai SET berat_badan = ROUND(RAND() * 100, 2);
+Query OK, 18 rows affected (0.008 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+19.Gunakan alter tabel pada tabel pegawai untuk menambahkan kolom baru umur dengan tipe data 
+integer wajib diisi, lalu input umur semua pegawai secara acak
+JB.
+MariaDB [dbpegawai]> ALTER TABLE pegawai ADD COLUMN umur INT NOT NULL;
+Query OK, 0 rows affected (0.012 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpegawai]>  UPDATE pegawai SET umur = YEAR(CURRENT_DATE()) - YEAR(tgl_lahir);
+Query OK, 18 rows affected (0.005 sec)
+Rows matched: 18  Changed: 18  Warnings: 0
+
+20.Gunakan alter tabel pada tabel pegawai untuk mengubah nama kolom gender menjadi 
+jenis_kelamin
+JB.
+MariaDB [dbpegawai]> ALTER TABLE pegawai CHANGE COLUMN gender jenis_kelamin ENUM('Laki-Laki', 'Perempuan') NOT NULL;
+Query OK, 0 rows affected (0.011 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+21.Tampilkan kolom2 tertentu di tabel pegawai (nip,nama,jenis_kelamin,alamat)
+JB.
+MariaDB [dbpegawai]> SELECT nip, nama, jenis_kelamin, alamat FROM pegawai;
++-------+---------------------+---------------+------------------------------+
+| nip   | nama                | jenis_kelamin | alamat                       |
++-------+---------------------+---------------+------------------------------+
+| 00001 | annisa popy e       | Perempuan     | jln menuju surganya allah 07 |
+| 00002 | sindy aulia         | Perempuan     | jln menuju surganya allah 07 |
+| 00003 | sevina citra        | Perempuan     | jln menuju surganya allah 07 |
+| 00004 | salamah mutmainah   | Perempuan     | jln menuju surganya allah 07 |
+| 00005 | najwa zahra zahiro  | Perempuan     | jln menuju surganya allah 07 |
+| 00006 | muhammad risky p    | Laki-Laki     | jln kemenangan depok 09/00   |
+| 00007 | muhammad rasyid had | Laki-Laki     | jln kemenangan depok 09/00   |
+| 00008 | muhammad al_fajri   | Laki-Laki     | jln kemenangan depok 09/00   |
+| 00009 | muhammad danish     | Laki-Laki     | jln kemenangan depok 09/00   |
+| 00010 | muhammad fayad      | Laki-Laki     | jln kemenangan depok 09/00   |
+| 00011 | dinda azzahra       | Perempuan     | jln balai hilir sumbar       |
+| 00012 | nayla putri         | Perempuan     | jln sumber berkah            |
+| 00013 | fatimah putri       | Perempuan     | jln sumber berkah jaya kaya  |
+| 00014 | laylatul jannah     | Perempuan     | jln sumber berkah jaya kaya  |
+| 00015 | berliana putri      | Perempuan     | jln tak tau arah             |
+| 00016 | danis putra bungsu  | Laki-Laki     | jln kemenangan depok 09/00   |
+| 00017 | ziki fattah akbar   | Laki-Laki     | jln pahlawan solok padang 00 |
+| 00018 | fayad abdullah      | Laki-Laki     | jln pahlawan solok padang 00 |
++-------+---------------------+---------------+------------------------------+
+18 rows in set (0.001 sec)
+
+22.Tampilkan baris2 tertentu di tabel pegawai (yang gendernya laki2 saja)
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE jenis_kelamin = 'laki-laki';
++----+-------+---------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama                | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+---------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+|  6 | 00006 | muhammad risky p    | Laki-Laki     | solok     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       62.84 |   24 |
+|  7 | 00007 | muhammad rasyid had | Laki-Laki     | depok     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |        11.5 |   24 |
+|  8 | 00008 | muhammad al_fajri   | Laki-Laki     | jakarta   | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       68.98 |   24 |
+|  9 | 00009 | muhammad danish     | Laki-Laki     | jakarta   | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       10.41 |   24 |
+| 10 | 00010 | muhammad fayad      | Laki-Laki     | bogor     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       45.09 |   24 |
+| 16 | 00016 | danis putra bungsu  | Laki-Laki     | bogor     | 2000-03-16 |        1 |         4 | jln kemenangan depok 09/00   |       93.72 |   24 |
+| 17 | 00017 | ziki fattah akbar   | Laki-Laki     | semarang  | 2000-03-16 |        1 |         4 | jln pahlawan solok padang 00 |       18.22 |   24 |
+| 18 | 00018 | fayad abdullah      | Laki-Laki     | semarang  | 1999-03-16 |        1 |         4 | jln pahlawan solok padang 00 |        9.93 |   25 |
++----+-------+---------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+8 rows in set (0.001 sec)
+
+23.Tampilkan baris2 tertentu di tabel pegawai (yang bekerja di divisi IT dan gendernya perempuan)
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE iddivisi = (SELECT id FROM divisi WHERE nama = 'IT') AND jenis_kelamin = 'perempuan';
++----+-------+--------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama               | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+--------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+|  1 | 00001 | annisa popy e      | Perempuan     | padang     | 2003-02-26 |        4 |         1 | jln menuju surganya allah 07 |       73.66 |   21 |
+|  2 | 00002 | sindy aulia        | Perempuan     | pekan baru | 2000-02-16 |        4 |         1 | jln menuju surganya allah 07 |        1.36 |   24 |
+|  3 | 00003 | sevina citra       | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       85.82 |   24 |
+|  4 | 00004 | salamah mutmainah  | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |          25 |   24 |
+|  5 | 00005 | najwa zahra zahiro | Perempuan     | palembang  | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       67.57 |   24 |
++----+-------+--------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+5 rows in set (0.006 sec)
+
+24.Tampilkan data pegawai yang umurnya di atas 30 tahun dan lahirnya di kota jakarta dengan 
+klausa WHERE, AND 
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE umur > 30 AND tmp_lahir = 'jakarta';
+Empty set (0.001 sec)
+
+25.Tampilkan data pegawai yang bekerja pada divisi marketing, berumur lebih dari 30 tahun dan 
+berjenis kelamin perempuan dengan klausa WHERE, AND 
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE iddivisi = (SELECT id FROM divisi WHERE nama = 'MARKETING') AND umur > 30 AND jenis_kelamin = 'perempuan';
+Empty set (0.004 sec)
+
+26.Tampilkan data pegawai dengan klausa key (nip) 
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY nip;
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama                | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+|  1 | 00001 | annisa popy e       | Perempuan     | padang     | 2003-02-26 |        4 |         1 | jln menuju surganya allah 07 |       73.66 |   21 |
+|  2 | 00002 | sindy aulia         | Perempuan     | pekan baru | 2000-02-16 |        4 |         1 | jln menuju surganya allah 07 |        1.36 |   24 |
+|  3 | 00003 | sevina citra        | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       85.82 |   24 |
+|  4 | 00004 | salamah mutmainah   | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |          25 |   24 |
+|  5 | 00005 | najwa zahra zahiro  | Perempuan     | palembang  | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       67.57 |   24 |
+|  6 | 00006 | muhammad risky p    | Laki-Laki     | solok      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       62.84 |   24 |
+|  7 | 00007 | muhammad rasyid had | Laki-Laki     | depok      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |        11.5 |   24 |
+|  8 | 00008 | muhammad al_fajri   | Laki-Laki     | jakarta    | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       68.98 |   24 |
+|  9 | 00009 | muhammad danish     | Laki-Laki     | jakarta    | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       10.41 |   24 |
+| 10 | 00010 | muhammad fayad      | Laki-Laki     | bogor      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       45.09 |   24 |
+| 11 | 00011 | dinda azzahra       | Perempuan     | palembang  | 2000-02-16 |        2 |         3 | jln balai hilir sumbar       |       94.21 |   24 |
+| 12 | 00012 | nayla putri         | Perempuan     | palembang  | 2002-02-16 |        2 |         3 | jln sumber berkah            |       35.81 |   22 |
+| 13 | 00013 | fatimah putri       | Perempuan     | bandung    | 2002-02-16 |        2 |         3 | jln sumber berkah jaya kaya  |       96.39 |   22 |
+| 14 | 00014 | laylatul jannah     | Perempuan     | bandung    | 2002-05-16 |        2 |         3 | jln sumber berkah jaya kaya  |       74.52 |   22 |
+| 15 | 00015 | berliana putri      | Perempuan     | medan      | 2001-05-16 |        2 |         3 | jln tak tau arah             |       83.46 |   23 |
+| 16 | 00016 | danis putra bungsu  | Laki-Laki     | bogor      | 2000-03-16 |        1 |         4 | jln kemenangan depok 09/00   |       93.72 |   24 |
+| 17 | 00017 | ziki fattah akbar   | Laki-Laki     | semarang   | 2000-03-16 |        1 |         4 | jln pahlawan solok padang 00 |       18.22 |   24 |
+| 18 | 00018 | fayad abdullah      | Laki-Laki     | semarang   | 1999-03-16 |        1 |         4 | jln pahlawan solok padang 00 |        9.93 |   25 |
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+18 rows in set (0.004 sec)
+
+27.Tampilkan data pegawai dengan klausa non key (gender) 
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE jenis_kelamin = 'perempuan';
++----+-------+--------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama               | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+--------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+|  1 | 00001 | annisa popy e      | Perempuan     | padang     | 2003-02-26 |        4 |         1 | jln menuju surganya allah 07 |       73.66 |   21 |
+|  2 | 00002 | sindy aulia        | Perempuan     | pekan baru | 2000-02-16 |        4 |         1 | jln menuju surganya allah 07 |        1.36 |   24 |
+|  3 | 00003 | sevina citra       | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       85.82 |   24 |
+|  4 | 00004 | salamah mutmainah  | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |          25 |   24 |
+|  5 | 00005 | najwa zahra zahiro | Perempuan     | palembang  | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       67.57 |   24 |
+| 11 | 00011 | dinda azzahra      | Perempuan     | palembang  | 2000-02-16 |        2 |         3 | jln balai hilir sumbar       |       94.21 |   24 |
+| 12 | 00012 | nayla putri        | Perempuan     | palembang  | 2002-02-16 |        2 |         3 | jln sumber berkah            |       35.81 |   22 |
+| 13 | 00013 | fatimah putri      | Perempuan     | bandung    | 2002-02-16 |        2 |         3 | jln sumber berkah jaya kaya  |       96.39 |   22 |
+| 14 | 00014 | laylatul jannah    | Perempuan     | bandung    | 2002-05-16 |        2 |         3 | jln sumber berkah jaya kaya  |       74.52 |   22 |
+| 15 | 00015 | berliana putri     | Perempuan     | medan      | 2001-05-16 |        2 |         3 | jln tak tau arah             |       83.46 |   23 |
++----+-------+--------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+10 rows in set (0.001 sec)
+
+28.Tampilkan data pegawai dengan klausa in (menyebutkan beberapa nip)
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nip IN ('00001', '00007', '00008');
++----+-------+---------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama                | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+---------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+|  1 | 00001 | annisa popy e       | Perempuan     | padang    | 2003-02-26 |        4 |         1 | jln menuju surganya allah 07 |       73.66 |   21 |
+|  7 | 00007 | muhammad rasyid had | Laki-Laki     | depok     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |        11.5 |   24 |
+|  8 | 00008 | muhammad al_fajri   | Laki-Laki     | jakarta   | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       68.98 |   24 |
++----+-------+---------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+3 rows in set (0.001 sec)
+
+29.Tampilkan data pegawai dengan klausa not in (menyebutkan beberapa tempat lahir)
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE tmp_lahir NOT IN('palembang', 'bandung', 'surabaya');
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama                | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+|  1 | 00001 | annisa popy e       | Perempuan     | padang     | 2003-02-26 |        4 |         1 | jln menuju surganya allah 07 |       73.66 |   21 |
+|  2 | 00002 | sindy aulia         | Perempuan     | pekan baru | 2000-02-16 |        4 |         1 | jln menuju surganya allah 07 |        1.36 |   24 |
+|  6 | 00006 | muhammad risky p    | Laki-Laki     | solok      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       62.84 |   24 |
+|  7 | 00007 | muhammad rasyid had | Laki-Laki     | depok      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |        11.5 |   24 |
+|  8 | 00008 | muhammad al_fajri   | Laki-Laki     | jakarta    | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       68.98 |   24 |
+|  9 | 00009 | muhammad danish     | Laki-Laki     | jakarta    | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       10.41 |   24 |
+| 10 | 00010 | muhammad fayad      | Laki-Laki     | bogor      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       45.09 |   24 |
+| 15 | 00015 | berliana putri      | Perempuan     | medan      | 2001-05-16 |        2 |         3 | jln tak tau arah             |       83.46 |   23 |
+| 16 | 00016 | danis putra bungsu  | Laki-Laki     | bogor      | 2000-03-16 |        1 |         4 | jln kemenangan depok 09/00   |       93.72 |   24 |
+| 17 | 00017 | ziki fattah akbar   | Laki-Laki     | semarang   | 2000-03-16 |        1 |         4 | jln pahlawan solok padang 00 |       18.22 |   24 |
+| 18 | 00018 | fayad abdullah      | Laki-Laki     | semarang   | 1999-03-16 |        1 |         4 | jln pahlawan solok padang 00 |        9.93 |   25 |
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+11 rows in set (0.001 sec)
+
+30.Tampilkan data pegawai berdasarkan nama secara ascending
+JB.
+MariaDB [dbpegawai]>  SELECT * FROM pegawai ORDER BY nama ASC;
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama                | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+|  1 | 00001 | annisa popy e       | Perempuan     | padang     | 2003-02-26 |        4 |         1 | jln menuju surganya allah 07 |       73.66 |   21 |
+| 15 | 00015 | berliana putri      | Perempuan     | medan      | 2001-05-16 |        2 |         3 | jln tak tau arah             |       83.46 |   23 |
+| 16 | 00016 | danis putra bungsu  | Laki-Laki     | bogor      | 2000-03-16 |        1 |         4 | jln kemenangan depok 09/00   |       93.72 |   24 |
+| 11 | 00011 | dinda azzahra       | Perempuan     | palembang  | 2000-02-16 |        2 |         3 | jln balai hilir sumbar       |       94.21 |   24 |
+| 13 | 00013 | fatimah putri       | Perempuan     | bandung    | 2002-02-16 |        2 |         3 | jln sumber berkah jaya kaya  |       96.39 |   22 |
+| 18 | 00018 | fayad abdullah      | Laki-Laki     | semarang   | 1999-03-16 |        1 |         4 | jln pahlawan solok padang 00 |        9.93 |   25 |
+| 14 | 00014 | laylatul jannah     | Perempuan     | bandung    | 2002-05-16 |        2 |         3 | jln sumber berkah jaya kaya  |       74.52 |   22 |
+|  8 | 00008 | muhammad al_fajri   | Laki-Laki     | jakarta    | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       68.98 |   24 |
+|  9 | 00009 | muhammad danish     | Laki-Laki     | jakarta    | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       10.41 |   24 |
+| 10 | 00010 | muhammad fayad      | Laki-Laki     | bogor      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       45.09 |   24 |
+|  7 | 00007 | muhammad rasyid had | Laki-Laki     | depok      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |        11.5 |   24 |
+|  6 | 00006 | muhammad risky p    | Laki-Laki     | solok      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       62.84 |   24 |
+|  5 | 00005 | najwa zahra zahiro  | Perempuan     | palembang  | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       67.57 |   24 |
+| 12 | 00012 | nayla putri         | Perempuan     | palembang  | 2002-02-16 |        2 |         3 | jln sumber berkah            |       35.81 |   22 |
+|  4 | 00004 | salamah mutmainah   | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |          25 |   24 |
+|  3 | 00003 | sevina citra        | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       85.82 |   24 |
+|  2 | 00002 | sindy aulia         | Perempuan     | pekan baru | 2000-02-16 |        4 |         1 | jln menuju surganya allah 07 |        1.36 |   24 |
+| 17 | 00017 | ziki fattah akbar   | Laki-Laki     | semarang   | 2000-03-16 |        1 |         4 | jln pahlawan solok padang 00 |       18.22 |   24 |
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+18 rows in set (0.001 sec)
+
+31.Tampilkan data pegawai dari yang berat badan paling gemuk ke paling kurus 
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY berat_badan DESC;
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama                | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+| 13 | 00013 | fatimah putri       | Perempuan     | bandung    | 2002-02-16 |        2 |         3 | jln sumber berkah jaya kaya  |       96.39 |   22 |
+| 11 | 00011 | dinda azzahra       | Perempuan     | palembang  | 2000-02-16 |        2 |         3 | jln balai hilir sumbar       |       94.21 |   24 |
+| 16 | 00016 | danis putra bungsu  | Laki-Laki     | bogor      | 2000-03-16 |        1 |         4 | jln kemenangan depok 09/00   |       93.72 |   24 |
+|  3 | 00003 | sevina citra        | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       85.82 |   24 |
+| 15 | 00015 | berliana putri      | Perempuan     | medan      | 2001-05-16 |        2 |         3 | jln tak tau arah             |       83.46 |   23 |
+| 14 | 00014 | laylatul jannah     | Perempuan     | bandung    | 2002-05-16 |        2 |         3 | jln sumber berkah jaya kaya  |       74.52 |   22 |
+|  1 | 00001 | annisa popy e       | Perempuan     | padang     | 2003-02-26 |        4 |         1 | jln menuju surganya allah 07 |       73.66 |   21 |
+|  8 | 00008 | muhammad al_fajri   | Laki-Laki     | jakarta    | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       68.98 |   24 |
+|  5 | 00005 | najwa zahra zahiro  | Perempuan     | palembang  | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       67.57 |   24 |
+|  6 | 00006 | muhammad risky p    | Laki-Laki     | solok      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       62.84 |   24 |
+| 10 | 00010 | muhammad fayad      | Laki-Laki     | bogor      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       45.09 |   24 |
+| 12 | 00012 | nayla putri         | Perempuan     | palembang  | 2002-02-16 |        2 |         3 | jln sumber berkah            |       35.81 |   22 |
+|  4 | 00004 | salamah mutmainah   | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |          25 |   24 |
+| 17 | 00017 | ziki fattah akbar   | Laki-Laki     | semarang   | 2000-03-16 |        1 |         4 | jln pahlawan solok padang 00 |       18.22 |   24 |
+|  7 | 00007 | muhammad rasyid had | Laki-Laki     | depok      | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |        11.5 |   24 |
+|  9 | 00009 | muhammad danish     | Laki-Laki     | jakarta    | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00   |       10.41 |   24 |
+| 18 | 00018 | fayad abdullah      | Laki-Laki     | semarang   | 1999-03-16 |        1 |         4 | jln pahlawan solok padang 00 |        9.93 |   25 |
+|  2 | 00002 | sindy aulia         | Perempuan     | pekan baru | 2000-02-16 |        4 |         1 | jln menuju surganya allah 07 |        1.36 |   24 |
++----+-------+---------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+18 rows in set (0.001 sec)
+
+32.Tampilkan data 5 pegawai teratas gunakan klausa limit
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai LIMIT 5;
++----+-------+--------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama               | jenis_kelamin | tmp_lahir  | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+--------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+|  1 | 00001 | annisa popy e      | Perempuan     | padang     | 2003-02-26 |        4 |         1 | jln menuju surganya allah 07 |       73.66 |   21 |
+|  2 | 00002 | sindy aulia        | Perempuan     | pekan baru | 2000-02-16 |        4 |         1 | jln menuju surganya allah 07 |        1.36 |   24 |
+|  3 | 00003 | sevina citra       | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       85.82 |   24 |
+|  4 | 00004 | salamah mutmainah  | Perempuan     | surabaya   | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |          25 |   24 |
+|  5 | 00005 | najwa zahra zahiro | Perempuan     | palembang  | 2000-03-16 |        4 |         1 | jln menuju surganya allah 07 |       67.57 |   24 |
++----+-------+--------------------+---------------+------------+------------+----------+-----------+------------------------------+-------------+------+
+5 rows in set (0.001 sec)
+
+33.Tampilkan data 5 pegawai terbawah gunakan klausa limit offset
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai ORDER BY id DESC LIMIT 5;
++----+-------+--------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+--------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+| 18 | 00018 | fayad abdullah     | Laki-Laki     | semarang  | 1999-03-16 |        1 |         4 | jln pahlawan solok padang 00 |        9.93 |   25 |
+| 17 | 00017 | ziki fattah akbar  | Laki-Laki     | semarang  | 2000-03-16 |        1 |         4 | jln pahlawan solok padang 00 |       18.22 |   24 |
+| 16 | 00016 | danis putra bungsu | Laki-Laki     | bogor     | 2000-03-16 |        1 |         4 | jln kemenangan depok 09/00   |       93.72 |   24 |
+| 15 | 00015 | berliana putri     | Perempuan     | medan     | 2001-05-16 |        2 |         3 | jln tak tau arah             |       83.46 |   23 |
+| 14 | 00014 | laylatul jannah    | Perempuan     | bandung   | 2002-05-16 |        2 |         3 | jln sumber berkah jaya kaya  |       74.52 |   22 |
++----+-------+--------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+5 rows in set (0.001 sec)
+
+34.Tampilkan jumlah pegawai gunakan fungsi aggregrat count
+JB.
+MariaDB [dbpegawai]> SELECT COUNT(*) AS total_pegawai FROM pegawai;
++---------------+
+| total_pegawai |
++---------------+
+|            18 |
++---------------+
+1 row in set (0.005 sec)
+
+35.Tampilkan nip,nama pegawai, umur yg paling tua gunakan fungsi aggregrat max (kombinasi 
+dengan sub query) 
+JB.
+MariaDB [dbpegawai]> SELECT nip, nama, YEAR(CURRENT_DATE()) - YEAR(tgl_lahir) AS umur
+    -> FROM pegawai
+    -> WHERE tgl_lahir = (SELECT MAX(tgl_lahir) FROM pegawai);
++-------+---------------+------+
+| nip   | nama          | umur |
++-------+---------------+------+
+| 00001 | annisa popy e |   21 |
++-------+---------------+------+
+1 row in set (0.001 sec)
+
+36.Tampilkan nip,nama pegawai, berat_badan yg paling kurus gunakan fungsi aggregrat min 
+(kombinasi dengan sub query)
+JB.
+MariaDB [dbpegawai]> SELECT nip, nama, YEAR(CURRENT_DATE()) - YEAR(tgl_lahir) AS umur
+    -> FROM pegawai
+    -> WHERE berat_badan = (SELECT MIN(berat_badan) FROM pegawai);
++-------+-------------+------+
+| nip   | nama        | umur |
++-------+-------------+------+
+| 00002 | sindy aulia |   24 |
++-------+-------------+------+
+1 row in set (0.004 sec)
+
+37.Tampilkan data rata2 umur pegawai gunakan fungsi aggregrat avg
+JB.
+MariaDB [dbpegawai]> SELECT AVG(YEAR(CURRENT_DATE()) - YEAR(tgl_lahir)) AS rata_rata_umur FROM pegawai;
++----------------+
+| rata_rata_umur |
++----------------+
+|        23.5000 |
++----------------+
+1 row in set (0.001 sec)
+
+38.Tampilkan jumlah data pegawai yang laki2 dan berumur lebih dari 40 tahun dan berjabatan 
+Manajer, gunakan fungsi aggregrat count dan klausa AND
+JB.
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai WHERE jenis_kelamin = 'Laki-Laki' AND umur > 40 AND idjabatan = ( SELECT id FROM jabatan WHERE nama = 'MANAGER');
++----------------+
+| jumlah_pegawai |
++----------------+
+|              0 |
++----------------+
+1 row in set (0.001 sec)
+
+39.Tampilkan jumlah data pegawai yang perempuan dan berumur kurang dari 40 tahun dan 
+berjabatan Staff, gunakan fungsi aggregrat count dan klausa AND
+JB.
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai FROM pegawai WHERE jenis_kelamin = 'perempuan' AND umur < 40 AND idjabatan = ( SELECT id FROM jabatan WHERE nama = 'STAFF');
++----------------+
+| jumlah_pegawai |
++----------------+
+|              0 |
++----------------+
+1 row in set (0.001 sec)
+
+40.Tampilkan jumlah data pegawai yang perempuan gunakan fungsi aggregrat count
+JB.
+MariaDB [dbpegawai]> SELECT COUNT(*) AS jumlah_pegawai_perempuan FROM pegawai WHERE jenis_kelamin = 'perempuan';
++--------------------------+
+| jumlah_pegawai_perempuan |
++--------------------------+
+|                       10 |
++--------------------------+
+1 row in set (0.001 sec)
+
+41.Tampilkan jumlah pegawai yang bekerja di divisi SDM dengan fungsi aggregrat sum dan klausa 
+WHERE
+JB.
+MariaDB [dbpegawai]>  SELECT SUM(CASE WHEN iddivisi = (SELECT id FROM divisi WHERE nama = 'SDM') THEN 1 ELSE 0 END) AS jumlah_pegawai_sdm FROM pegawai;
++--------------------+
+| jumlah_pegawai_sdm |
++--------------------+
+|                  3 |
++--------------------+
+1 row in set (0.004 sec)
+
+42.Tampilkan jumlah pegawai berdasarkan divisi masing2 menggunakan fungsi aggregrat count 
+dan klausa group by
+JB.
+MariaDB [dbpegawai]> SELECT d.nama AS divisi, COUNT(*) AS jumlah_pegawai
+    -> FROM pegawai p
+    -> JOIN divisi d ON p.iddivisi = d.id
+    -> GROUP BY d.nama;
++-----------+----------------+
+| divisi    | jumlah_pegawai |
++-----------+----------------+
+| IT        |              5 |
+| KEUANGAN  |              5 |
+| MARKETING |              5 |
+| SDM       |              3 |
++-----------+----------------+
+4 rows in set (0.002 sec)
+
+43.Tampilkan data jumlah pegawai berdasarkan gender, yg jumlah minimal 10 orang (gunakan 
+group by dan having) 
+JB.
+MariaDB [dbpegawai]> SELECT jenis_kelamin, COUNT(*) AS jumlah_pegawai
+    -> FROM pegawai
+    -> GROUP BY jenis_kelamin
+    -> HAVING COUNT(*) >= 10;
++---------------+----------------+
+| jenis_kelamin | jumlah_pegawai |
++---------------+----------------+
+| Perempuan     |             10 |
++---------------+----------------+
+1 row in set (0.001 sec)
+
+44.Cari data pegawai yang berawalan kata Muhammad
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE 'Muhammad%';
++----+-------+---------------------+---------------+-----------+------------+----------+-----------+----------------------------+-------------+------+
+| id | nip   | nama                | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                     | berat_badan | umur |
++----+-------+---------------------+---------------+-----------+------------+----------+-----------+----------------------------+-------------+------+
+|  6 | 00006 | muhammad risky p    | Laki-Laki     | solok     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00 |       62.84 |   24 |
+|  7 | 00007 | muhammad rasyid had | Laki-Laki     | depok     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00 |        11.5 |   24 |
+|  8 | 00008 | muhammad al_fajri   | Laki-Laki     | jakarta   | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00 |       68.98 |   24 |
+|  9 | 00009 | muhammad danish     | Laki-Laki     | jakarta   | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00 |       10.41 |   24 |
+| 10 | 00010 | muhammad fayad      | Laki-Laki     | bogor     | 2000-03-16 |        3 |         2 | jln kemenangan depok 09/00 |       45.09 |   24 |
++----+-------+---------------------+---------------+-----------+------------+----------+-----------+----------------------------+-------------+------+
+5 rows in set (0.001 sec)
+
+45.Cari data pegawai yang berakhiran kata Santoso 
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '%Santoso';
+Empty set (0.001 sec)
+
+46.Cari data pegawai yang mengadung kata Asep
+JB.
+MariaDB [dbpegawai]>  SELECT * FROM pegawai WHERE nama LIKE '%Asep%';
+Empty set (0.001 sec)
+
+47.Cari data pegawai yang huruf kelimanya huruf S
+JB.
+MariaDB [dbpegawai]> SELECT * FROM pegawai WHERE nama LIKE '____s%';
++----+-------+--------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+| id | nip   | nama               | jenis_kelamin | tmp_lahir | tgl_lahir  | iddivisi | idjabatan | alamat                       | berat_badan | umur |
++----+-------+--------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+|  1 | 00001 | annisa popy e      | Perempuan     | padang    | 2003-02-26 |        4 |         1 | jln menuju surganya allah 07 |       73.66 |   21 |
+| 16 | 00016 | danis putra bungsu | Laki-Laki     | bogor     | 2000-03-16 |        1 |         4 | jln kemenangan depok 09/00   |       93.72 |   24 |
++----+-------+--------------------+---------------+-----------+------------+----------+-----------+------------------------------+-------------+------+
+2 rows in set (0.001 sec)
+
+BISMILLAH 100!
